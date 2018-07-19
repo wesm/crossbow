@@ -1,0 +1,79 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+language: generic
+
+os: osx
+osx_image: xcode8.3
+
+env:
+  global:
+    - PLAT=x86_64
+    - TRAVIS_TAG=build-4-wheel-osx-cp36m
+    - BUILD_REF=126b29bd98b985bd36f4aea0f172db4ff143a1f9
+    - PYARROW_VERSION=0.9.1.dev382
+    - MACOSX_DEPLOYMENT_TARGET="10.9"
+    - MB_PYTHON_VERSION=3.6
+    - NP_BUILD_DEP="1.11.3"
+    - NP_TEST_DEP="1.14.0"
+    - PANDAS_DEP="0.20.3"
+    - PYARROW_BUILD_VERBOSE=1
+
+before_install:
+  - git clone https://github.com/matthew-brett/multibuild # TODO pin it
+  - git clone -b ARROW-2326 git@github.com:wesm/arrow.git arrow
+  - git -C arrow checkout 126b29bd98b985bd36f4aea0f172db4ff143a1f9
+
+  # Also remove artifacts that depend on Boost
+  - brew uninstall boost cgal postgis sfcgal
+  - brew update
+  - brew upgrade cmake
+  - brew install bison flex
+
+  - export CONFIG_PATH=`pwd`/arrow/dev/tasks/python-wheels/osx-build.sh
+  - source multibuild/common_utils.sh
+  - source multibuild/travis_osx_steps.sh
+
+  - before_install
+
+install:
+  - BUILD_DEPENDS="numpy==$NP_BUILD_DEP six cython"
+  - TEST_DEPENDS="numpy==$NP_TEST_DEP six pandas==$PANDAS_DEP"
+
+  - mkdir -p dist
+
+  # multibuild's default clean_code function
+  - clean_code arrow $BUILD_REF
+
+  # the following functions are defined in osx-build.sh
+  - build_wheel arrow
+  - install_run arrow
+
+  # move built wheels to a top level directory
+  - mv -v arrow/python/dist/* dist/
+
+deploy:
+  provider: releases
+  api_key: $CROSSBOW_GITHUB_TOKEN
+  file_glob: true
+  file: dist/*.whl
+  skip_cleanup: true
+  on:
+    tags: true
+
+notifications:
+  email:
+    - wesm+git@apache.org
