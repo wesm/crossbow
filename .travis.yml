@@ -1,0 +1,70 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+os: linux
+dist: trusty
+language: generic
+
+# don't build twice
+if: tag IS blank
+
+env:
+  global:
+    - TRAVIS_TAG=build-8-conda-linux-py36
+    - ARROW_VERSION=0.1.dev2853
+    - PYTHONUNBUFFERED=1
+
+install:
+  # Install Miniconda.
+  - echo `pwd`
+  - |
+    echo ""
+    echo "Installing a fresh version of Miniconda."
+    MINICONDA_URL="https://repo.continuum.io/miniconda"
+    MINICONDA_FILE="Miniconda3-latest-Linux-x86_64.sh"
+    curl -L -O "${MINICONDA_URL}/${MINICONDA_FILE}"
+    bash $MINICONDA_FILE -b
+
+  # Configure conda.
+  - |
+    echo ""
+    echo "Configuring conda."
+    source /home/travis/miniconda3/bin/activate root
+    conda config --remove channels defaults
+    conda config --add channels defaults
+    conda config --add channels conda-forge
+    conda config --set show_channel_urls true
+    conda install --yes --quiet conda-build
+
+script:
+  - git clone -b master https://github.com/wesm/arrow.git arrow
+  - git -C arrow checkout 606799215cae84c029e803645bca8c6a59cb5ef2
+  - pushd arrow/dev/tasks/conda-recipes
+  - conda build --output-folder . -m variants/linux_python3.6.yaml parquet-cpp arrow-cpp pyarrow
+
+deploy:
+  provider: releases
+  api_key: $CROSSBOW_GITHUB_TOKEN
+  file_glob: true
+  file: $TRAVIS_BUILD_DIR/arrow/dev/tasks/conda-recipes/linux-64/*.tar.bz2
+  skip_cleanup: true
+  on:
+    tags: true
+
+notifications:
+  email:
+    - wesm+git@apache.org
