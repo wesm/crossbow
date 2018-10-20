@@ -1,0 +1,231 @@
+!Job
+target: !Target
+  head: 606799215cae84c029e803645bca8c6a59cb5ef2
+  email: wesm+git@apache.org
+  branch: master
+  remote: https://github.com/wesm/arrow.git
+  version: 0.1.dev2853
+tasks:
+  wheel-win-cp35m: !Task
+    platform: win
+    template: python-wheels/appveyor.yml
+    artifacts:
+    - pyarrow-0.1.dev2853-cp35-cp35m-win_amd64.whl
+    params:
+      numpy_version: 1.14.5
+      python_version: 3.5
+    branch: build-8-wheel-win-cp35m
+    commit: 8d88a8294519ced3bf408bda81ac1c75df86ac66
+  wheel-linux-cp37m: !Task
+    platform: linux
+    template: python-wheels/travis.linux.yml
+    artifacts:
+    - pyarrow-0.1.dev2853-cp37-cp37m-manylinux1_x86_64.whl
+    params:
+      wheel_version: 0.31.1
+      python_version: 3.7
+      unicode_width: 16
+      test_docker_images:
+      - python:3.7-slim
+    branch: build-8-wheel-linux-cp37m
+    commit: b57e04d71e7326d3319de697062d079a55f8920f
+  wheel-linux-cp36m: !Task
+    platform: linux
+    template: python-wheels/travis.linux.yml
+    artifacts:
+    - pyarrow-0.1.dev2853-cp36-cp36m-manylinux1_x86_64.whl
+    params:
+      wheel_version: 0.31.1
+      python_version: 3.6
+      unicode_width: 16
+      test_docker_images:
+      - python:3.6-slim
+    branch: build-8-wheel-linux-cp36m
+    commit: 6b676bbca5f9d607fb1ffbb41e4b97390354e8ce
+  wheel-osx-cp37m: !Task
+    platform: osx
+    template: python-wheels/travis.osx.yml
+    artifacts:
+    - pyarrow-0.1.dev2853-cp37-cp37m-macosx_10_6_intel.whl
+    params:
+      numpy_version: 1.14.5
+      pandas_version: 0.23.0
+      python_version: 3.7
+      wheel_version: 0.31.1
+    branch: build-8-wheel-osx-cp37m
+    commit: 524c25b1e04713f37f9ea18a5b7f73045ba2ae11
+  conda-linux-py36: !Task
+    platform: linux
+    template: conda-recipes/travis.linux.yml
+    artifacts:
+    - arrow-cpp-0.1.dev2853-py36(h[a-z0-9]+)_0.tar.bz2
+    - pyarrow-0.1.dev2853-py36(h[a-z0-9]+)_0.tar.bz2
+    params:
+      variant_config_file: variants/linux_python3.6.yaml
+    branch: build-8-conda-linux-py36
+    commit: 28fb55a1f69d416aef8bc9cf889d7fedf2c7ca2c
+  conda-linux-py35: !Task
+    platform: linux
+    template: conda-recipes/travis.linux.yml
+    artifacts:
+    - arrow-cpp-0.1.dev2853-py35(h[a-z0-9]+)_0.tar.bz2
+    - pyarrow-0.1.dev2853-py35(h[a-z0-9]+)_0.tar.bz2
+    params:
+      variant_config_file: variants/linux_python3.5.yaml
+    branch: build-8-conda-linux-py35
+    commit: 44bf3538e9965c42ed435388377044fc19891c24
+  conda-win-py35: !Task
+    platform: win
+    template: conda-recipes/appveyor.yml
+    artifacts:
+    - arrow-cpp-0.1.dev2853-py35_vc14(h[a-z0-9]+)_0.tar.bz2
+    - pyarrow-0.1.dev2853-py35(h[a-z0-9]+)_0.tar.bz2
+    params:
+      variant_config_file: variants\win_c_compilervs2015cxx_compilervs2015python3.5.yaml
+    branch: build-8-conda-win-py35
+    commit: 0e76f53b52348b35b40310f2fc93c063a0e08201
+  wheel-linux-cp27m: !Task
+    platform: linux
+    template: python-wheels/travis.linux.yml
+    artifacts:
+    - pyarrow-0.1.dev2853-cp27-cp27m-manylinux1_x86_64.whl
+    params:
+      wheel_version: 0.31.1
+      python_version: 2.7
+      unicode_width: 16
+      test_docker_images: []
+    branch: build-8-wheel-linux-cp27m
+    commit: 62bfdc9c22104df98453d50da831e2e1b3dece22
+  wheel-osx-cp36m: !Task
+    platform: osx
+    template: python-wheels/travis.osx.yml
+    artifacts:
+    - pyarrow-0.1.dev2853-cp36-cp36m-macosx_10_6_intel.whl
+    params:
+      numpy_version: 1.14.5
+      pandas_version: 0.23.0
+      python_version: 3.6
+      wheel_version: 0.31.1
+    branch: build-8-wheel-osx-cp36m
+    commit: cc10281b81e3c9dcf40fd10b46c3800c5db23e33
+  conda-osx-py27: !Task
+    platform: osx
+    template: conda-recipes/travis.osx.yml
+    artifacts:
+    - arrow-cpp-0.1.dev2853-py27(h[a-z0-9]+)_0.tar.bz2
+    - pyarrow-0.1.dev2853-py27(h[a-z0-9]+)_0.tar.bz2
+    params:
+      variant_config_file: variants/osx_python2.7.yaml
+    branch: build-8-conda-osx-py27
+    commit: 7f9cc418b4daf232f9dc50c936b5db2f66b68f3c
+  wheel-linux-cp35m: !Task
+    platform: linux
+    template: python-wheels/travis.linux.yml
+    artifacts:
+    - pyarrow-0.1.dev2853-cp35-cp35m-manylinux1_x86_64.whl
+    params:
+      wheel_version: 0.31.1
+      python_version: 3.5
+      unicode_width: 16
+      test_docker_images:
+      - python:3.5-slim
+    branch: build-8-wheel-linux-cp35m
+    commit: ece570a3322ee3e1a1d8379e20d91a080dedb716
+  wheel-osx-cp27m: !Task
+    platform: osx
+    template: python-wheels/travis.osx.yml
+    artifacts:
+    - pyarrow-0.1.dev2853-cp27-cp27m-macosx_10_6_intel.whl
+    params:
+      numpy_version: 1.14.5
+      pandas_version: 0.23.0
+      python_version: 2.7
+      wheel_version: 0.31.1
+    branch: build-8-wheel-osx-cp27m
+    commit: 4cec0aabffc92b9b2bc4c5b3dc801bad25d63b02
+  wheel-osx-cp35m: !Task
+    platform: osx
+    template: python-wheels/travis.osx.yml
+    artifacts:
+    - pyarrow-0.1.dev2853-cp35-cp35m-macosx_10_6_intel.whl
+    params:
+      numpy_version: 1.14.5
+      pandas_version: 0.23.0
+      python_version: 3.5
+      wheel_version: 0.31.1
+    branch: build-8-wheel-osx-cp35m
+    commit: 6e3a8ffef2bdeb1f5b8fd8b4323227552ae148f0
+  wheel-win-cp37m: !Task
+    platform: win
+    template: python-wheels/appveyor.yml
+    artifacts:
+    - pyarrow-0.1.dev2853-cp37-cp37m-win_amd64.whl
+    params:
+      numpy_version: 1.14.5
+      python_version: 3.7
+    branch: build-8-wheel-win-cp37m
+    commit: 2a9464fcf1c155ed2b13224bb51f393ccd8c22d1
+  conda-osx-py36: !Task
+    platform: osx
+    template: conda-recipes/travis.osx.yml
+    artifacts:
+    - arrow-cpp-0.1.dev2853-py36(h[a-z0-9]+)_0.tar.bz2
+    - pyarrow-0.1.dev2853-py36(h[a-z0-9]+)_0.tar.bz2
+    params:
+      variant_config_file: variants/osx_python3.6.yaml
+    branch: build-8-conda-osx-py36
+    commit: 37017cfdb47de0a998960ee0216b375f3d020a13
+  wheel-linux-cp27mu: !Task
+    platform: linux
+    template: python-wheels/travis.linux.yml
+    artifacts:
+    - pyarrow-0.1.dev2853-cp27-cp27mu-manylinux1_x86_64.whl
+    params:
+      wheel_version: 0.31.1
+      python_version: 2.7
+      unicode_width: 32
+      test_docker_images:
+      - python:2.7-slim    # debian ucs4
+    branch: build-8-wheel-linux-cp27mu
+    commit: 2e735127443db11b0c22f12be235054d4492f7d6
+  wheel-win-cp36m: !Task
+    platform: win
+    template: python-wheels/appveyor.yml
+    artifacts:
+    - pyarrow-0.1.dev2853-cp36-cp36m-win_amd64.whl
+    params:
+      numpy_version: 1.14.5
+      python_version: 3.6
+    branch: build-8-wheel-win-cp36m
+    commit: ef84f1b40cdd9107d0a44425bde5b13844ac0057
+  conda-osx-py35: !Task
+    platform: osx
+    template: conda-recipes/travis.osx.yml
+    artifacts:
+    - arrow-cpp-0.1.dev2853-py35(h[a-z0-9]+)_0.tar.bz2
+    - pyarrow-0.1.dev2853-py35(h[a-z0-9]+)_0.tar.bz2
+    params:
+      variant_config_file: variants/osx_python3.5.yaml
+    branch: build-8-conda-osx-py35
+    commit: fead62a37ec52882878b180cfa77eb13b659eb47
+  conda-win-py36: !Task
+    platform: win
+    template: conda-recipes/appveyor.yml
+    artifacts:
+    - arrow-cpp-0.1.dev2853-py36_vc14(h[a-z0-9]+)_0.tar.bz2
+    - pyarrow-0.1.dev2853-py36(h[a-z0-9]+)_0.tar.bz2
+    params:
+      variant_config_file: variants\win_c_compilervs2015cxx_compilervs2015python3.6.yaml
+    branch: build-8-conda-win-py36
+    commit: 256aff16216453dfd301fc1aab711715f172a7e5
+  conda-linux-py27: !Task
+    platform: linux
+    template: conda-recipes/travis.linux.yml
+    artifacts:
+    - arrow-cpp-0.1.dev2853-py27(h[a-z0-9]+)_0.tar.bz2
+    - pyarrow-0.1.dev2853-py27(h[a-z0-9]+)_0.tar.bz2
+    params:
+      variant_config_file: variants/linux_python2.7.yaml
+    branch: build-8-conda-linux-py27
+    commit: 3aaac76ec7e69e9ec75c84eb5115a3dd31eff58e
+branch: build-8
