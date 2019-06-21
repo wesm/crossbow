@@ -1,0 +1,30 @@
+!Job
+target: !Target
+  head: 71e277664370c1c394a0fd8ebcc0dfebfa88722a
+  email: wesm+git@apache.org
+  branch: ARROW-5656
+  remote: https://github.com/wesm/arrow.git
+  version: 0.13.0.dev460
+  no_rc_version: 0.13.0.dev460
+tasks:
+  wheel-win-cp35m: !Task
+    ci: appveyor
+    platform: win
+    template: python-wheels/appveyor.yml
+    artifacts:
+    - pyarrow-0.13.0.dev460-cp35-cp35m-win_amd64.whl
+    params:
+      python_version: 3.5
+    branch: build-21-appveyor-wheel-win-cp35m
+    commit: 9948187842a6f3b03e86cbd73b9415174b981c0d
+  wheel-win-cp36m: !Task
+    ci: appveyor
+    platform: win
+    template: python-wheels/appveyor.yml
+    artifacts:
+    - pyarrow-0.13.0.dev460-cp36-cp36m-win_amd64.whl
+    params:
+      python_version: 3.6
+    branch: build-21-appveyor-wheel-win-cp36m
+    commit: b6062db242096a60d26a1f620b54623c1d8384ec
+branch: build-21
