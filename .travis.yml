@@ -1,0 +1,87 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+os: osx
+osx_image: xcode8.3
+language: generic
+
+# don't build twice
+if: tag IS blank
+
+env:
+  global:
+    - PLAT=x86_64
+    - TRAVIS_TAG=build-19-wheel-osx-cp36m
+    - MACOSX_DEPLOYMENT_TARGET="10.9"
+    - PYARROW_VERSION=0.13.0.dev451
+    - PYARROW_BUILD_VERBOSE=1
+    - MB_PYTHON_VERSION=3.6
+
+before_install:
+  - git clone https://github.com/matthew-brett/multibuild # TODO pin it
+  - git -C multibuild checkout 4e7a9396e9a50731bb83fc0d16bb98fb0c4032d7
+
+  - git clone --no-checkout https://github.com/wesm/arrow.git arrow
+  - git -C arrow fetch -t https://github.com/wesm/arrow.git ARROW-5656
+  - git -C arrow checkout 0b5f5248efd3b00058e6d73a9a2d808a6ec83152
+
+  # ARROW-3976 Old versions of git can cause failures when Homebrew prints a
+  # donation solicitation. Attempt to update git
+  - git --version
+  - brew upgrade git
+
+  # Also remove artifacts that depend on Boost
+  - brew uninstall boost cgal postgis sfcgal
+  - brew update
+  - brew upgrade cmake
+  - brew install bison flex grpc openssl llvm@7
+
+  - export CONFIG_PATH=`pwd`/arrow/dev/tasks/python-wheels/osx-build.sh
+  - source multibuild/common_utils.sh
+  - source multibuild/travis_osx_steps.sh
+
+  - before_install
+  # Fix SSL TLS issue for Python 3.5 on macOS
+  - pip install requests[security]
+
+install:
+  - mkdir -p dist
+
+  # multibuild's default clean_code function
+  - clean_code arrow 0b5f5248efd3b00058e6d73a9a2d808a6ec83152
+
+  # the following functions are defined in osx-build.sh
+  - build_wheel arrow
+
+  # test the built wheels, remove llvm to ensure it links statically
+  - brew uninstall llvm@7
+  - install_run arrow
+
+  # move built wheels to a top level directory
+  - mv -v arrow/python/dist/* dist/
+
+deploy:
+  provider: releases
+  api_key: $CROSSBOW_GITHUB_TOKEN
+  file_glob: true
+  file: dist/*.whl
+  skip_cleanup: true
+  on:
+    tags: true
+
+notifications:
+  email:
+    - wesm+git@apache.org
