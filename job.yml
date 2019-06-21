@@ -1,0 +1,22 @@
+!Job
+target: !Target
+  head: e1e8ea8c5d7c0900a98ad6176614393ac2e95d68
+  email: wesm+git@apache.org
+  branch: ARROW-5669
+  remote: https://github.com/wesm/arrow.git
+  version: 0.13.0.dev447
+  no_rc_version: 0.13.0.dev447
+tasks:
+  wheel-linux-cp37m: !Task
+    platform: linux
+    template: python-wheels/travis.linux.yml
+    artifacts:
+    - pyarrow-0.13.0.dev447-cp37-cp37m-manylinux1_x86_64.whl
+    params:
+      python_version: 3.7
+      unicode_width: 16
+      test_docker_images:
+      - python:3.7-slim
+    branch: build-16-wheel-linux-cp37m
+    commit: f81d8aa3110aa55911a11d8eadc8cc55c6f44af3
+branch: build-16
