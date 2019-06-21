@@ -1,0 +1,376 @@
+!Job
+target: !Target
+  head: 00db153824475800a2a0974a5180d669b156b3ec
+  email: wesm+git@apache.org
+  branch: master
+  remote: https://github.com/wesm/arrow.git
+  version: 0.13.0.dev460
+  no_rc_version: 0.13.0.dev460
+tasks:
+  docker-python-3.6-alpine: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.6
+      commands:
+      - docker-compose build cpp-alpine
+      - docker-compose build python-alpine
+      - docker-compose run python-alpine
+
+    branch: build-23-circle-docker-python-3.6-alpine
+    commit: bd9ce236e17f5781b9ef012e554bc01eea64eda3
+  docker-python-3.7: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.7
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose run python
+
+    branch: build-23-circle-docker-python-3.7
+    commit: 90c4dec520965bb2cbb13976bf75e477cc6e8c4d
+  docker-clang-format: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.6
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose build lint
+      - docker-compose run clang-format
+
+  ############################## Integration tests ############################
+
+    branch: build-23-circle-docker-clang-format
+    commit: c8172e874cd2e8fcc669c91db1655fac42b6e26b
+  docker-js: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      commands:
+      - docker-compose build js
+      - docker-compose run js
+
+    branch: build-23-circle-docker-js
+    commit: 4b828ff99b08384410f744b1a6dbfcf958ec763d
+  docker-r: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      commands:
+      - docker-compose build cpp
+      - docker-compose build r
+      - docker-compose run r
+
+    branch: build-23-circle-docker-r
+    commit: e83e31b661f4c60977afca5db9545540b03fdbf8
+  docker-python-2.7-alpine: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 2.7
+      commands:
+      - docker-compose build cpp-alpine
+      - docker-compose build python-alpine
+      - docker-compose run python-alpine
+
+    branch: build-23-circle-docker-python-2.7-alpine
+    commit: bd9ce236e17f5781b9ef012e554bc01eea64eda3
+  docker-python-3.6-nopandas: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.6
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose build python-nopandas
+      - docker-compose run python-nopandas
+
+  ###################### Documentation building tests #########################
+
+    branch: build-23-circle-docker-python-3.6-nopandas
+    commit: 2e404e105018fe21b7d6ecf01a874792d31e2f1e
+  docker-pandas-master: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.6
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose build --no-cache pandas-master
+      - docker-compose run pandas-master
+    branch: build-23-circle-docker-pandas-master
+    commit: a14405773f07fcc141313e3c16cb5a308b4dd9e3
+  docker-spark-integration: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.6
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose build spark-integration
+      - docker-compose run spark-integration
+
+    branch: build-23-circle-docker-spark-integration
+    commit: 5818a4381f31415c80366eedc0b1b6d53bc69609
+  docker-c_glib: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      commands:
+      - docker-compose build cpp
+      - docker-compose build c_glib
+      - docker-compose run c_glib
+
+    branch: build-23-circle-docker-c_glib
+    commit: c6d84da3a417adb841a1676ab5f43a8f393cc6d4
+  docker-python-3.6: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.6
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose run python
+
+    branch: build-23-circle-docker-python-3.6
+    commit: 90c4dec520965bb2cbb13976bf75e477cc6e8c4d
+  docker-dask-integration: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.6
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose build dask-integration
+      - docker-compose run dask-integration
+
+    branch: build-23-circle-docker-dask-integration
+    commit: caf3f985f01706e0bf26cdfb70111ad9280bcb6b
+  docker-python-2.7-nopandas: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 2.7
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose build python-nopandas
+      - docker-compose run python-nopandas
+
+    branch: build-23-circle-docker-python-2.7-nopandas
+    commit: 2e404e105018fe21b7d6ecf01a874792d31e2f1e
+  docker-cpp-cmake32: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      commands:
+      - docker-compose build cpp-cmake32
+      - docker-compose run cpp-cmake32
+
+    branch: build-23-circle-docker-cpp-cmake32
+    commit: 3dabe9efce0533ef12f4001284e9a1cc08694481
+  docker-iwyu: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.6
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose build lint
+      - docker-compose run iwyu
+
+    branch: build-23-circle-docker-iwyu
+    commit: 2d2ce30ab34a8616fab001fd20e19a4794fe67b3
+  docker-turbodbc-integration: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.6
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose build turbodbc-integration
+      - docker-compose run turbodbc-integration
+
+    branch: build-23-circle-docker-turbodbc-integration
+    commit: 7ad874e9e80b4159c9a1a67fdb1f04da54b09e12
+  docker-cpp: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      commands:
+      - docker-compose build cpp
+      - docker-compose run cpp
+
+    branch: build-23-circle-docker-cpp
+    commit: c6c412ae72f7fb11cdb5ff75e96df17973212a6a
+  docker-python-2.7: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 2.7
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose run python
+
+    branch: build-23-circle-docker-python-2.7
+    commit: 90c4dec520965bb2cbb13976bf75e477cc6e8c4d
+  docker-docs: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.6
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose build docs
+      - docker-compose run docs
+
+  ############################## Linter tests #################################
+
+    branch: build-23-circle-docker-docs
+    commit: 2f5c1d6b790384ed00d1b235e983f215cba9274f
+  docker-cpp-alpine: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      commands:
+      - docker-compose build cpp-alpine
+      - docker-compose run cpp-alpine
+
+    branch: build-23-circle-docker-cpp-alpine
+    commit: 9f87487202981c9c533fe5f19137beacb200699e
+  docker-java: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      commands:
+      - docker-compose build java
+      - docker-compose run java
+
+    branch: build-23-circle-docker-java
+    commit: 76690d19f68c07e38e09ab39f09e8b1184a64316
+  docker-hdfs-integration: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.6
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose build hdfs-integration
+      - docker-compose run hdfs-integration
+
+    branch: build-23-circle-docker-hdfs-integration
+    commit: 5c77615d727155a3acb8a5f751f32d6053c7f63d
+  docker-lint: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      environment:
+        PYTHON_VERSION: 3.6
+      commands:
+      - docker-compose build cpp
+      - docker-compose build python
+      - docker-compose build lint
+      - docker-compose run lint
+
+    branch: build-23-circle-docker-lint
+    commit: 574817489494cc1c672e90de53e2df8e07d67262
+  docker-rust: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      commands:
+      - docker-compose build rust
+      - docker-compose run rust
+
+    branch: build-23-circle-docker-rust
+    commit: 12db75e52b0eefa56077a07ce5e85f372d5706d1
+  docker-go: !Task
+    ci: circle
+    platform: linux
+    template: docker-tests/circle.linux.yml
+    artifacts: []
+    params:
+      commands:
+      - docker-compose build go
+      - docker-compose run go
+
+    branch: build-23-circle-docker-go
+    commit: 9685e29e63a2bc1de96515d9ed7f5962a41f0e6d
+branch: build-23
