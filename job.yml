@@ -1,0 +1,20 @@
+!Job
+target: !Target
+  head: 532d4ba05a87e64a23e3a7b44bfbf34fa0c9a90b
+  email: wesm+git@apache.org
+  branch: ARROW-3572
+  remote: https://github.com/wesm/arrow.git
+  version: 0.13.0.dev478
+  no_rc_version: 0.13.0.dev478
+tasks:
+  wheel-osx-cp36m: !Task
+    ci: travis
+    platform: osx
+    template: python-wheels/travis.osx.yml
+    artifacts:
+    - pyarrow-0.13.0.dev478-cp36-cp36m-macosx_10_6_intel.whl
+    params:
+      python_version: 3.6
+    branch: build-24-travis-wheel-osx-cp36m
+    commit: 397fba28a62ea81ff11eb55b849cde34f784b2e5
+branch: build-24
