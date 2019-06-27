@@ -1,0 +1,32 @@
+!Job
+target: !Target
+  head: 909b798c26ca4cd3758b034b98115d3718b5319c
+  email: wesm+git@apache.org
+  branch: conda-flight
+  remote: https://github.com/lihalite/arrow.git
+  version: 0.13.0.dev542
+  no_rc_version: 0.13.0.dev542
+tasks:
+  conda-win-vs2015-py36: !Task
+    ci: appveyor
+    platform: win
+    template: conda-recipes/appveyor.win.yml
+    artifacts:
+    - arrow-cpp-0.13.0.dev542-py36(h[a-z0-9]+)_0.tar.bz2
+    - pyarrow-0.13.0.dev542-py36(h[a-z0-9]+)_0.tar.bz2
+    params:
+      config: win_c_compilervs2015cxx_compilervs2015python3.6
+    branch: build-27-appveyor-conda-win-vs2015-py36
+    commit: 799b20ac82ba7aee0c59b66df5ad574bd710cf35
+  conda-win-vs2015-py37: !Task
+    ci: appveyor
+    platform: win
+    template: conda-recipes/appveyor.win.yml
+    artifacts:
+    - arrow-cpp-0.13.0.dev542-py37(h[a-z0-9]+)_0.tar.bz2
+    - pyarrow-0.13.0.dev542-py37(h[a-z0-9]+)_0.tar.bz2
+    params:
+      config: win_c_compilervs2015cxx_compilervs2015python3.7
+    branch: build-27-appveyor-conda-win-vs2015-py37
+    commit: 390c030e7b9d80df62409493f8aef695934fc8d8
+branch: build-27
