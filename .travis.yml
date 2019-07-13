@@ -1,0 +1,60 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+os: linux
+dist: xenial
+language: ruby
+
+services:
+  - docker
+
+# don't build twice
+if: tag IS blank
+
+env:
+  global:
+    - TRAVIS_TAG=build-28-travis-ubuntu-disco
+    - BUILD_REF=d5f74a4ee14c34c7c8c94ad9e83ca7e9b5459957
+    - ARROW_VERSION=0.14.0.dev43
+
+before_script:
+  - git clone --no-checkout https://github.com/apache/arrow.git arrow
+  - git -C arrow fetch -t https://github.com/apache/arrow.git maint-0.14.x
+  - git -C arrow checkout FETCH_HEAD
+
+script:
+  - pushd arrow/dev/tasks/linux-packages
+  - rake version:update
+  - rake dist
+  - rake apt:build APT_TARGETS=ubuntu-disco
+
+deploy:
+  provider: releases
+  api_key: $CROSSBOW_GITHUB_TOKEN
+  file_glob: true
+  file:
+  - "**/*.deb"
+  - "**/*.dsc"
+  - "**/*.debian.tar.xz"
+  - "**/*.orig.tar.gz"
+  skip_cleanup: true
+  on:
+    tags: true
+
+notifications:
+  email:
+    - wesm+git@apache.org
